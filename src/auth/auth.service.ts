@@ -29,14 +29,14 @@ export class AuthService {
         })
 
         if(!user){
-            throw new NotFoundException("Пользователь не найден");
+            throw new NotFoundException("Пользователь не найден user");
         }
-        if(await verify(user.password, LoginDto.password)){
-            throw new NotFoundException("Пользователь не найден")
+        if(await !verify(user.password, LoginDto.password)){
+            throw new NotFoundException("Пользователь не найден password")
         }
 
         const payload: JwtPayload = {id: user.id}
-
+        console.log('logi')
         return this.auth(response, payload, user.id);
     }
 
@@ -48,12 +48,17 @@ export class AuthService {
         return this.auth(response, payload, user.id);
     }
 
+    async logout(response: Response){
+        this.setCookie(response, '', '', new Date(0))
+        return {message: 'logout'}
+    }
+
     private auth(response: Response, payload: JwtPayload, id: string){
         const {accessToken, refreshToken} = this.generateJwt(payload)
-
+        
         this.setCookie(response, refreshToken, id, new Date(Date.now() + 1000 * 60 * 60 * 24 * 7))
-
-        return accessToken
+        console.log(accessToken)
+        return 1
     }
 
     private generateJwt(payload: JwtPayload){

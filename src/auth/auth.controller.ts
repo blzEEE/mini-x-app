@@ -7,13 +7,18 @@ import { RegisterDto } from './dto/register.dto';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post()
-  login(@Res() response, @Body() LoginDto: LoginDto){
+  @Post('login')
+  login(@Res({passthrough: true}) response, @Body() LoginDto: LoginDto){
     return this.authService.login(response, LoginDto);
   }
 
-  @Post()
-  register(@Res() response, @Body() RegisterDto: RegisterDto){
+  @Post('register')
+  register(@Res({passthrough: true}) response, @Body() RegisterDto: RegisterDto){
     return this.authService.register(response, RegisterDto)
+  }
+
+  @Post('logout')
+  logout(@Res({passthrough: true}) response){
+    return this.authService.logout(response);
   }
 }

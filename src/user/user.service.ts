@@ -18,7 +18,7 @@ export class UserService {
         login
       }
     });
-
+    console.log(username)
     if(isExist){
       throw new BadRequestException({message: "Пользователь с таким логином уже существует"});
     }
@@ -56,7 +56,7 @@ export class UserService {
     })
 
     if(!user){
-      throw new NotFoundException({message: "Пользователь не найден"})
+      throw new NotFoundException({message: "Пользователь не найден service"})
     }
     return user;
   }
