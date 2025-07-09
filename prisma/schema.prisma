@@ -27,9 +27,9 @@ model Post {
   text String
   user User @relation(fields: [userId], references: [id])
   userId String @map("user_id")
-  likes Int
-  commentIds String @map("comment_ids")
-  comments Post @relation("PostComments", fields: [commentIds], references: [id])
+  likes Int @default(0)
+  commentIds String[] @map("comment_ids")
+  comments Post? @relation("PostComments", fields: [commentIds], references: [id])
   post Post[] @relation("PostComments")
   tags PostsOnTags[]
 
