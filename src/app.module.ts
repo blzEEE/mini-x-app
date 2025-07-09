@@ -6,16 +6,19 @@ import { PostModule } from './post/post.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { TagModule } from './tag/tag.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true
+      isGlobal: true,
+      
     }),
     UserModule,
     PostModule,
     AuthModule,
-    PrismaModule
+    PrismaModule,
+    TagModule
   ],
   controllers: [AppController],
   providers: [AppService],

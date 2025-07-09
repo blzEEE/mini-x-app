@@ -1,8 +1,9 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, UsePipes } from '@nestjs/common';
 import { hash } from 'argon2';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { Request } from 'express';
 
 @Injectable()
 export class UserService {
@@ -52,6 +53,16 @@ export class UserService {
     const user = await this.prismaService.user.findUnique({
       where: {
         id
+      },
+      include: {
+        followedBy: true,
+        following: true,
+        _count: {
+          select: {
+            followedBy: true,
+            following: true
+          }
+        }
       }
     })
 
@@ -103,5 +114,69 @@ export class UserService {
       }
     })
     return true;
+  }
+
+  async follow(request: Request, id: string){
+    const followedById = request.cookies.user
+
+    const result = await this.prismaService.$transaction([
+      this.prismaService.user.update({
+        where: {
+          id
+        }, 
+        data:{
+          following: {
+            connect: {
+              id: followedById
+            }
+          }
+        }
+      }),
+      this.prismaService.user.update({
+        where: {
+          id: followedById
+        },
+        data: {
+          followedBy: {
+            connect: {
+              id
+            }
+          }
+         }
+      })
+    ])
+    return result
+  }
+
+  async unfollow(request: Request, id: string){
+    const followedById = request.cookies.user
+
+    const result = await this.prismaService.$transaction([
+      this.prismaService.user.update({
+        where: {
+          id
+        },
+        data: {
+          following: {
+            disconnect: {
+              id: followedById
+            }
+          }
+        }
+      }),
+      this.prismaService.user.update({
+        where: {
+          id: followedById
+        },
+        data: {
+          followedBy: {
+            disconnect: {
+              id
+            }
+          }
+        }
+      })
+    ])
+    return result
   }
 }

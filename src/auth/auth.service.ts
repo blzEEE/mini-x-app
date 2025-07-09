@@ -36,7 +36,6 @@ export class AuthService {
         }
 
         const payload: JwtPayload = {id: user.id}
-        console.log('logi')
         return this.auth(response, payload, user.id);
     }
 
@@ -56,8 +55,7 @@ export class AuthService {
     private auth(response: Response, payload: JwtPayload, id: string){
         const {accessToken, refreshToken} = this.generateJwt(payload)
         
-        this.setCookie(response, refreshToken, id, new Date(Date.now() + 1000 * 60 * 60 * 24 * 7))
-        console.log(accessToken)
+        this.setCookie(response, refreshToken, id, new Date(Date.now() + 1000 * 60 * 60))
         return 1
     }
 
