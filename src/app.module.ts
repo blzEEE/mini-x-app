@@ -7,6 +7,7 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { TagModule } from './tag/tag.module';
+import { RedisModule } from './redis/redis.module';
 
 @Module({
   imports: [
@@ -18,7 +19,8 @@ import { TagModule } from './tag/tag.module';
     PostModule,
     AuthModule,
     PrismaModule,
-    TagModule
+    TagModule,
+    RedisModule,
   ],
   controllers: [AppController],
   providers: [AppService],
