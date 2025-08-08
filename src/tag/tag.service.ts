@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateTagDto } from './dto/create-tag.dto';
-import { Tag } from '@prisma/client';
 
 @Injectable()
 export class TagService {
@@ -12,7 +11,6 @@ export class TagService {
             select: {
                 id: true,
                 tag: true,
-                posts: true
             },
             orderBy: {
                 createdAt: 'desc'
@@ -23,7 +21,7 @@ export class TagService {
     }
 
     async getByTag(tagName: string){
-        const tag = await this.prismaService.tag.findMany({
+        const tag = await this.prismaService.tag.findUnique({
             where: {
                 tag: tagName
             },
@@ -32,9 +30,6 @@ export class TagService {
                 tag: true,
                 posts: true
             },
-            orderBy: {
-                createdAt: 'desc'
-            }
         })
 
         return tag
@@ -47,11 +42,6 @@ export class TagService {
     }
 
     async createOrConnect(tags: string[]){
-        let addedTags: Tag[];
-        tags.forEach(async tag => {
-            const newTag = await this.prismaService.tag.upsert({
-                data: {tag}
-            })
-        });
+
     }
 }
